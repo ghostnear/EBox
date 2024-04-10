@@ -1,6 +1,6 @@
 #include "emulators/chip8/core.h"
 
-CHIP8EmulatorConfig* parse_chip8_emulator_config(char* path)
+CHIP8EmulatorConfig* parse_chip8_emulator_config(const char* path)
 {
     return 0;
 }

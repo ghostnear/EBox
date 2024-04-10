@@ -41,4 +41,4 @@ drmemory:
 # This fucker is amazing.
 valgrind:
 	@echo "[CMAKE]: Running Valgrind..."
-	@valgrind ./bin/EBox
+	@valgrind  --leak-check=full --show-leak-kinds=all --track-origins=yes ./bin/EBox
