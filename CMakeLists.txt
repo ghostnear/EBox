@@ -21,3 +21,30 @@ target_include_directories(
 PRIVATE
     ./include
 )
+
+set(OpenGL_GL_PREFERENCE "GLVND")
+
+find_package(SDL2 CONFIG REQUIRED)
+find_package(OpenGL REQUIRED)
+find_package(glm CONFIG REQUIRED)
+find_package(GLEW REQUIRED)
+
+target_link_libraries(
+	${PROJECT_NAME}
+	PUBLIC
+		GLEW::GLEW
+		OpenGL::GL glm::glm
+		$<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>
+        $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>
+)
+
+target_compile_options(
+    ${PROJECT_NAME}
+PRIVATE
+    -Wall
+    -Wextra
+    -Werror
+    -Wno-unused-parameter
+    -Wno-unused-variable
+    -Wno-unused-function
+)

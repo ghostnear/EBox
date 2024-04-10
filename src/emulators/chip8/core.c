@@ -4,14 +4,23 @@
 #include <string.h>
 
 #include "utils/inifile.h"
+#include "utils/message_box.h"
 
 CHIP8EmulatorConfig* chip8_config_parse(FILE* file)
 {
     CHIP8EmulatorConfig* config = calloc(1, sizeof(CHIP8EmulatorConfig));
 
     ini_file_data* input = ini_file_read(file);
+    fclose(file);
 
-    config->path = strdup(ini_file_get_string(input, "ROM", "Path"));
+    const char* path = ini_file_get_string(input, "ROM", "Path");
+    if(path == NULL)
+    {
+        show_simple_error_messagebox("Error!", "Path has not been specified in startup config!");
+        chip8_config_free(config);
+        exit(0);
+    }
+    config->path = strdup(path);
 
     ini_file_free(input);
 
@@ -26,7 +35,10 @@ CHIP8Emulator* chip8_emulator_initialize(CHIP8EmulatorConfig* config)
 void chip8_config_free(void* pointer)
 {
     const CHIP8EmulatorConfig* config = (CHIP8EmulatorConfig*) pointer;
-    free(config->path);
+
+    if(config->path != NULL)
+        free(config->path);
+    
     free((void*)config);
 }
 

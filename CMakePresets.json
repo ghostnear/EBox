@@ -1,0 +1,29 @@
+{
+    "version": 2,
+    "configurePresets": [
+      {
+        "name": "windows-base",
+        "generator": "Unix Makefiles",
+        "binaryDir": "${sourceDir}/build",
+        "cacheVariables": {
+          "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+          "VCPKG_TARGET_TRIPLET": "x64-windows",
+          "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+        } 
+      },
+      {
+        "name": "windows-debug",
+        "inherits": "windows-base",
+        "cacheVariables": {
+          "CMAKE_BUILD_TYPE": "Debug"
+        }
+      },
+      {
+        "name": "windows-release",
+        "inherits": "windows-base",
+        "cacheVariables": {
+          "CMAKE_BUILD_TYPE": "Release"
+        }
+      }
+    ]
+  }

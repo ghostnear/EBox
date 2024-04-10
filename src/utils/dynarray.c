@@ -1,7 +1,7 @@
 #include "utils/dynarray.h"
 
 #include <stdlib.h>
-#include <memory.h>
+#include <string.h>
 
 dynarray* dynarray_create(uint32_t element_size, dynarray_free_callback free_callback)
 {

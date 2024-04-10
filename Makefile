@@ -1,27 +1,23 @@
 .PHONY: build build-release build-debug clean test run
 
-build: build-debug
+build: build-windows-debug
 	@echo "[CMAKE]: Building done!"
 
-build-release:
-	@echo "[CMAKE]: Building in Release mode..."
-	@cmake -B build -S . -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -G "Unix Makefiles"
-	@cmake --build build --config Release
+build-windows-release:
+	@echo "[CMAKE]: Building in Release mode on Windows..."
+	@cmake -B build -S . --preset windows-release
+	@cmake --build build
 
-build-debug:
-	@echo "[CMAKE]: Building in Debug mode..."
-	@cmake -B build -S . -DCMAKE_BUILD_TYPE=DEBUG -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -G "Unix Makefiles"
-	@cmake --build build --config Debug
+build-windows-debug:
+	@echo "[CMAKE]: Building in Debug mode on Windows..."
+	@cmake -B build -S . --preset windows-debug
+	@cmake --build build
 
 clean:
 	@cmake -E remove_directory .cache
 	@cmake -E remove_directory build
 	@cmake -E remove_directory bin
 	@echo "[CMAKE]: Cleaning done!"
-
-test:
-	@echo "[CMAKE]: Running tests..."
-	@cd build && ctest
 
 run-debug:
 	@echo "[CMAKE]: Running Debug build..."

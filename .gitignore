@@ -2,3 +2,8 @@ bin/
 build/
 .cache/
 roms/
+
+# Windows specifics.
+*.dll
+vcpkg_installed/
+vcpkg-configuration.json

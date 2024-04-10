@@ -9,7 +9,7 @@ typedef struct
 
 typedef struct 
 {
-
+    int thing;
 } CHIP8Emulator;
 
 CHIP8EmulatorConfig* chip8_config_parse(FILE*);

@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "utils/inifile.h"
 #include "utils/memfree_list.h"
 #include "emulators/chip8/core.h"
 
@@ -12,8 +11,6 @@ int main()
     FILE* file = fopen("defaults/chip8.cfg", "r");
 
     CHIP8EmulatorConfig* config = chip8_config_parse(file);
-
-    fclose(file);
 
     CHIP8Emulator* emulator = chip8_emulator_initialize(config);
     memfree_add(emulator, chip8_emulator_free);
