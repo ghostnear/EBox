@@ -1,7 +1,20 @@
 .PHONY: build build-release build-debug clean test run
 
-build: build-windows-debug
+build-windows: build-windows-debug
 	@echo "[CMAKE]: Building done!"
+
+build-unix: build-unix-debug
+	@echo "[CMAKE]: Building done!"
+
+build-unix-release:
+	@echo "[CMAKE]: Building in Release mode on Unix..."
+	@cmake -B build -S . --preset unix-release
+	@cmake --build build
+
+build-unix-debug:
+	@echo "[CMAKE]: Building in Debug mode on Unix..."
+	@cmake -B build -S . --preset unix-debug
+	@cmake --build build
 
 build-windows-release:
 	@echo "[CMAKE]: Building in Release mode on Windows..."

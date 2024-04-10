@@ -29,7 +29,11 @@ CHIP8EmulatorConfig* chip8_config_parse(FILE* file)
 
 CHIP8Emulator* chip8_emulator_initialize(CHIP8EmulatorConfig* config)
 {
-    return 0;
+    CHIP8Emulator* emulator = calloc(1, sizeof(CHIP8Emulator));
+
+    emulator->memory = chip8_memory_initialize();
+
+    return emulator;
 }
 
 void chip8_config_free(void* pointer)
@@ -45,5 +49,6 @@ void chip8_config_free(void* pointer)
 void chip8_emulator_free(void* pointer)
 {
     const CHIP8Emulator* emulator = (CHIP8Emulator*) pointer;
+    chip8_memory_free(emulator->memory);
     free((void*)emulator);
 }

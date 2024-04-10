@@ -2,6 +2,8 @@
 
 #include <stdio.h>
 
+#include "memory.h"
+
 typedef struct
 {
     char* path;
@@ -9,7 +11,7 @@ typedef struct
 
 typedef struct 
 {
-    int thing;
+    CHIP8Memory* memory;
 } CHIP8Emulator;
 
 CHIP8EmulatorConfig* chip8_config_parse(FILE*);
