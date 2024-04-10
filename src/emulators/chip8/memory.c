@@ -14,7 +14,17 @@ CHIP8Memory* chip8_memory_initialize()
 
 void chip8_memory_load(CHIP8Memory* self, uint8_t* data, uint32_t size, uint32_t offset)
 {
-    memcpy(data, self->memory + offset, size * sizeof(uint8_t));
+    memcpy(self->memory + offset, data, size * sizeof(uint8_t));
+}
+
+uint8_t chip8_memory_read_byte(const CHIP8Memory* self, uint32_t address)
+{
+    return self->memory[address];
+}
+
+uint16_t chip8_memory_read_word(const CHIP8Memory* self, uint32_t address)
+{
+    return (self->memory[address] << 8) | self->memory[address + 1];
 }
 
 void chip8_memory_free(void* pointer)

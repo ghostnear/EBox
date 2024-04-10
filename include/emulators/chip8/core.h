@@ -13,6 +13,7 @@ typedef struct
 typedef struct 
 {
     bool running;
+    void** instruction_cache;
     CHIP8Memory* memory;
 } CHIP8Emulator;
 

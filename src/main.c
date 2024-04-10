@@ -4,7 +4,7 @@
 #include "utils/memfree_list.h"
 #include "emulators/chip8/core.h"
 
-int main()
+int main(int argc, char* argv[])
 {
     atexit(memfree_all);
 
@@ -14,7 +14,7 @@ int main()
 
     CHIP8Emulator* emulator = chip8_emulator_initialize(config);
     memfree_add(emulator, chip8_emulator_free);
-    
+
     chip8_config_free(config);
 
     while(emulator->running)

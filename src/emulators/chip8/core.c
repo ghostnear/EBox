@@ -44,14 +44,18 @@ CHIP8Emulator* chip8_emulator_initialize(CHIP8EmulatorConfig* config)
 
     uint32_t rom_size = file_size_get(rom);
 
+    // TODO: maybe make this configurable?
     const uint32_t mount_point = 0x100;
+    const uint32_t memory_size = 0x10000;
 
-    if(rom_size > 0x10000 - mount_point)
+    if(rom_size > memory_size - mount_point)
     {
         show_simple_error_messagebox("Error!", "File is too big to be a CHIP8 ROM!");
         fclose(rom);
         exit(-1);
     }
+
+    printf("[ INFO]: ROM size: %d bytes.\n", rom_size);
 
     uint8_t* data = calloc(rom_size, sizeof(uint8_t));
 
@@ -59,18 +63,17 @@ CHIP8Emulator* chip8_emulator_initialize(CHIP8EmulatorConfig* config)
 
     fclose(rom);
 
+    emulator->memory->PC = mount_point;
+
     chip8_memory_load(emulator->memory, data, rom_size, mount_point);
 
     free(data);
 
     emulator->running = true;
 
-    return emulator;
-}
+    emulator->instruction_cache = calloc(memory_size, sizeof(void*));
 
-void chip8_emulator_update(CHIP8Emulator* self, double delta_time)
-{
-    self->running = false;
+    return emulator;
 }
 
 void chip8_emulator_draw(CHIP8Emulator* self)
@@ -92,5 +95,6 @@ void chip8_emulator_free(void* pointer)
 {
     const CHIP8Emulator* emulator = (CHIP8Emulator*) pointer;
     chip8_memory_free(emulator->memory);
+    free(emulator->instruction_cache);
     free((void*)emulator);
 }

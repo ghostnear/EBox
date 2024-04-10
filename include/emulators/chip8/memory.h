@@ -4,9 +4,12 @@
 
 typedef struct
 {
+   uint16_t PC;
    uint8_t* memory;
 } CHIP8Memory;
 
 CHIP8Memory* chip8_memory_initialize();
 void chip8_memory_load(CHIP8Memory*, uint8_t*, uint32_t, uint32_t);
+uint8_t chip8_memory_read_byte(const CHIP8Memory*, uint32_t);
+uint16_t chip8_memory_read_word(const CHIP8Memory*, uint32_t);
 void chip8_memory_free(void*);
