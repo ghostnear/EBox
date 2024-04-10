@@ -14,9 +14,14 @@ int main()
 
     CHIP8Emulator* emulator = chip8_emulator_initialize(config);
     memfree_add(emulator, chip8_emulator_free);
+    
     chip8_config_free(config);
 
-    // while(1);
+    while(emulator->running)
+    {
+        chip8_emulator_update(emulator, 0);
+        chip8_emulator_draw(emulator);
+    }
     
     return EXIT_SUCCESS;
 }

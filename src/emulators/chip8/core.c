@@ -1,8 +1,10 @@
 #include "emulators/chip8/core.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "utils/file.h"
 #include "utils/inifile.h"
 #include "utils/message_box.h"
 
@@ -18,7 +20,7 @@ CHIP8EmulatorConfig* chip8_config_parse(FILE* file)
     {
         show_simple_error_messagebox("Error!", "Path has not been specified in startup config!");
         chip8_config_free(config);
-        exit(0);
+        exit(-1);
     }
     config->path = strdup(path);
 
@@ -33,7 +35,47 @@ CHIP8Emulator* chip8_emulator_initialize(CHIP8EmulatorConfig* config)
 
     emulator->memory = chip8_memory_initialize();
 
+    FILE* rom = fopen(config->path, "rb");
+    if(rom == NULL)
+    {
+        show_simple_error_messagebox("Error!", "The ROM file does not exist!");
+        exit(-1);
+    }
+
+    uint32_t rom_size = file_size_get(rom);
+
+    const uint32_t mount_point = 0x100;
+
+    if(rom_size > 0x10000 - mount_point)
+    {
+        show_simple_error_messagebox("Error!", "File is too big to be a CHIP8 ROM!");
+        fclose(rom);
+        exit(-1);
+    }
+
+    uint8_t* data = calloc(rom_size, sizeof(uint8_t));
+
+    fread(data, sizeof(uint8_t), rom_size, rom);
+
+    fclose(rom);
+
+    chip8_memory_load(emulator->memory, data, rom_size, mount_point);
+
+    free(data);
+
+    emulator->running = true;
+
     return emulator;
+}
+
+void chip8_emulator_update(CHIP8Emulator* self, double delta_time)
+{
+    self->running = false;
+}
+
+void chip8_emulator_draw(CHIP8Emulator* self)
+{
+
 }
 
 void chip8_config_free(void* pointer)
