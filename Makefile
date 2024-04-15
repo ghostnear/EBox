@@ -42,12 +42,14 @@ run-release:
 
 run: run-debug
 
-# This fucker is absolute trash.
-drmemory:
+windows-memcheck:
 	@echo "[CMAKE]: Running DrMemory..."
 	@drmemory ./bin/EBox.exe --ignore_kernel
 
-# This fucker is amazing.
-valgrind:
+unix-memcheck:
 	@echo "[CMAKE]: Running Valgrind..."
 	@valgrind  --leak-check=full --show-leak-kinds=all --track-origins=yes ./bin/EBox
+
+unix-profile:
+	@echo "[CMAKE]: Running gprof..."
+	@gprof ./bin/EBox ./bin/gmon.out > ./bin/analysis.txt

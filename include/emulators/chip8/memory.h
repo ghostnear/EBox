@@ -4,8 +4,11 @@
 
 typedef struct
 {
-   uint16_t PC;
+   uint16_t pc;
+   uint16_t i;
    uint8_t* memory;
+   uint8_t* vram;
+   uint8_t* v;
 } CHIP8Memory;
 
 CHIP8Memory* chip8_memory_initialize();

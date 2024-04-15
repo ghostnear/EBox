@@ -8,6 +8,21 @@
 #include "utils/inifile.h"
 #include "utils/message_box.h"
 
+void (*const chip8_draw_init_cache[])(void*) = {
+    chip8_emulator_init_display_none,
+    chip8_emulator_init_display_tui
+};
+
+void (*const chip8_draw_free_cache[])(void*) = {
+    chip8_emulator_free_display_none,
+    chip8_emulator_free_display_tui
+};
+
+void (*const chip8_draw_cache[])(void*) = {
+    chip8_emulator_draw_none,
+    chip8_emulator_draw_tui
+};
+
 CHIP8EmulatorConfig* chip8_config_parse(FILE* file)
 {
     CHIP8EmulatorConfig* config = calloc(1, sizeof(CHIP8EmulatorConfig));
@@ -23,6 +38,27 @@ CHIP8EmulatorConfig* chip8_config_parse(FILE* file)
         exit(-1);
     }
     config->path = strdup(path);
+    
+    const char* display_type = ini_file_get_string(input, "System", "Display");
+    if(display_type == NULL)
+    {
+        show_simple_error_messagebox("Error!", "Display type has not been specified in startup config!");
+        chip8_config_free(config);
+        exit(-1);
+    }
+
+    if(strcmp(display_type, "NONE") == 0)
+        config->display_type = CHIP8_DISPLAY_NONE;
+    else if(strcmp(display_type, "TUI") == 0)
+        config->display_type = CHIP8_DISPLAY_TUI;
+    else if(strcmp(display_type, "SDL") == 0)
+        config->display_type = CHIP8_DISPLAY_SDL;
+    else
+    {
+        show_simple_error_messagebox("Error!", "Invalid display type specified in startup config!");
+        chip8_config_free(config);
+        exit(-1);
+    }
 
     ini_file_free(input);
 
@@ -45,7 +81,7 @@ CHIP8Emulator* chip8_emulator_initialize(CHIP8EmulatorConfig* config)
     uint32_t rom_size = file_size_get(rom);
 
     // TODO: maybe make this configurable?
-    const uint32_t mount_point = 0x100;
+    const uint32_t mount_point = 0x200;
     const uint32_t memory_size = 0x10000;
 
     if(rom_size > memory_size - mount_point)
@@ -63,7 +99,7 @@ CHIP8Emulator* chip8_emulator_initialize(CHIP8EmulatorConfig* config)
 
     fclose(rom);
 
-    emulator->memory->PC = mount_point;
+    emulator->memory->pc = mount_point;
 
     chip8_memory_load(emulator->memory, data, rom_size, mount_point);
 
@@ -73,12 +109,16 @@ CHIP8Emulator* chip8_emulator_initialize(CHIP8EmulatorConfig* config)
 
     emulator->instruction_cache = calloc(memory_size, sizeof(void*));
 
+    chip8_draw_init_cache[config->display_type]((void*)emulator);    
+    emulator->display_function = chip8_draw_cache[config->display_type];
+    emulator->free_display = chip8_draw_free_cache[config->display_type];
+
     return emulator;
 }
 
 void chip8_emulator_draw(CHIP8Emulator* self)
 {
-
+    self->display_function(self);
 }
 
 void chip8_config_free(void* pointer)
@@ -96,5 +136,6 @@ void chip8_emulator_free(void* pointer)
     const CHIP8Emulator* emulator = (CHIP8Emulator*) pointer;
     chip8_memory_free(emulator->memory);
     free(emulator->instruction_cache);
+    emulator->free_display((void*)emulator);
     free((void*)emulator);
 }
