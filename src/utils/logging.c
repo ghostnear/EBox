@@ -13,14 +13,14 @@ static Logger* logger = NULL;
 void free_log_file(void* logger)
 {
     Logger* log = (Logger*)logger;
-    fclose(log->file);
+    if (log->file != NULL)
+        fclose(log->file);
     free(log);
 }
 
 Logger* create_log_file()
 {
     Logger* logger = calloc(1, sizeof(Logger));
-    logger->file = fopen("log.txt", "w");
     memfree_add(logger, free_log_file);
     return logger;
 }

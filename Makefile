@@ -42,11 +42,11 @@ run-release:
 
 run: run-debug
 
-windows-memcheck:
+memcheck-windows:
 	@echo "[CMAKE]: Running DrMemory..."
 	@drmemory ./bin/EBox.exe --ignore_kernel
 
-unix-memcheck:
+memcheck-unix:
 	@echo "[CMAKE]: Running Valgrind..."
 	@valgrind  --leak-check=full --show-leak-kinds=all --track-origins=yes ./bin/EBox
 
