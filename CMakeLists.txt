@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 add_compile_definitions(BUILD_TYPE_${CMAKE_BUILD_TYPE})
+add_compile_definitions(BUILD_PLATFORM_${CMAKE_BUILD_PLATFORM})
 
 project(EBox)
 

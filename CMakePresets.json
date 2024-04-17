@@ -8,7 +8,9 @@
         "cacheVariables": {
           "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
           "VCPKG_TARGET_TRIPLET": "x64-windows",
-          "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+          "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+          "CMAKE_BUILD_PLATFORM": "WINDOWS",
+          "CMAKE_BUILD_ARCH": "x64"
         } 
       },
       {
@@ -30,7 +32,9 @@
         "generator": "Unix Makefiles",
         "binaryDir": "${sourceDir}/build",
         "cacheVariables": {
-          "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+          "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+          "CMAKE_BUILD_PLATFORM": "UNIX",
+          "CMAKE_BUILD_ARCH": "x64"
         } 
       },
       {

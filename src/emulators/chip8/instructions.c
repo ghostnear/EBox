@@ -1,6 +1,7 @@
 #include "emulators/chip8/core.h"
 
 #include "utils/message_box.h"
+#include "utils/logging.h"
 
 #define  I()        self->memory->i
 #define PC()        self->memory->pc
@@ -15,6 +16,9 @@
 
 void chip8_emulator_step(CHIP8Emulator* self)
 {
+    // TODO: maybe replace this?
+    FILE* logging_file = logging_get_file();
+
     uint16_t opcode = OPCODE();
 
     if(self->instruction_cache[PC()] == NULL)
@@ -48,7 +52,7 @@ void chip8_emulator_step(CHIP8Emulator* self)
     CLS: {
         PC() += 2;
         
-        printf("[ WARN]: CLS opcode unimplemented.\n");
+        fprintf(logging_file, "[ WARN]: CLS opcode unimplemented.\n");
 
         goto END;
     }
@@ -56,7 +60,7 @@ void chip8_emulator_step(CHIP8Emulator* self)
     JP_NNN: {
         if((opcode & 0x0FFF) == PC())
         {
-            printf("[ WARN]: Infinite loop detected, exiting...\n");
+            fprintf(logging_file, "[ WARN]: Infinite loop detected, exiting...\n");
             self->running = false;
             goto END;
         }
@@ -85,14 +89,14 @@ void chip8_emulator_step(CHIP8Emulator* self)
     DRW: {
         PC() += 2;
 
-        printf("[ WARN]: DRW opcode unimplemented.\n");
+        fprintf(logging_file, "[ WARN]: DRW opcode unimplemented.\n");
 
         goto END;
     }
 
     UNKNOWN: {
         show_simple_error_messagebox("Error!", "Unknown opcode encountered!");
-        printf("[ERROR]: Unknown opcode at PC 0x%04X encountered: 0x%04X\n", PC(), opcode);
+        fprintf(logging_file, "[ERROR]: Unknown opcode at PC 0x%04X encountered: 0x%04X\n", PC(), opcode);
         self->running = false;
         goto END;
     }

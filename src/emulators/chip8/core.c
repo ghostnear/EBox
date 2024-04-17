@@ -7,6 +7,7 @@
 #include "utils/file.h"
 #include "utils/inifile.h"
 #include "utils/message_box.h"
+#include "utils/logging.h"
 
 void (*const chip8_draw_init_cache[])(void*) = {
     chip8_emulator_init_display_none,
@@ -91,7 +92,8 @@ CHIP8Emulator* chip8_emulator_initialize(CHIP8EmulatorConfig* config)
         exit(-1);
     }
 
-    printf("[ INFO]: ROM size: %d bytes.\n", rom_size);
+    FILE* log_file = logging_get_file();
+    fprintf(log_file, "[ INFO]: ROM size: %d bytes.\n", rom_size);
 
     uint8_t* data = calloc(rom_size, sizeof(uint8_t));
 

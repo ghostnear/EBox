@@ -1,16 +1,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "utils/memfree_list.h"
+#include "utils/logging.h"
 #include "emulators/chip8/core.h"
 
 int main(int argc, char* argv[])
 {
     atexit(memfree_all);
 
-    FILE* file = fopen("defaults/chip8.cfg", "r");
+    logging_set_file(fopen("last.log", "w"));
 
-    CHIP8EmulatorConfig* config = chip8_config_parse(file);
+    CHIP8EmulatorConfig* config = chip8_config_parse(fopen("defaults/chip8.cfg", "r"));
 
     CHIP8Emulator* emulator = chip8_emulator_initialize(config);
     memfree_add(emulator, chip8_emulator_free);

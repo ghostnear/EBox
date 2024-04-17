@@ -2,9 +2,12 @@
 
 #include <stdio.h>
 
+#include "utils/logging.h"
+
 void chip8_emulator_init_display_none(void* self)
 {
-    printf("[ WARN]: Display type NONE has been selected!\n");
+    FILE* logging_file = logging_get_file();
+    fprintf(logging_file, "[ WARN]: Display type NONE has been selected!\n");
 }
 
 void chip8_emulator_free_display_none(void* self)
