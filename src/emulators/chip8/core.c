@@ -26,6 +26,12 @@ void (*const chip8_draw_cache[])(void*) = {
 
 CHIP8EmulatorConfig* chip8_config_parse(FILE* file)
 {
+    if(file == NULL)
+    {
+        show_simple_error_messagebox("Error!", "Inexistent file sent to CHIP8 config parser.");
+        exit(-1);
+    }
+
     CHIP8EmulatorConfig* config = calloc(1, sizeof(CHIP8EmulatorConfig));
 
     ini_file_data* input = ini_file_read(file);
