@@ -8,12 +8,12 @@
 
 void chip8_emulator_init_display_tui(void* self)
 {
-
+    tui_display_cursor(false);
 }
 
 void chip8_emulator_free_display_tui(void* self)
-{
-
+{   
+    tui_display_cursor(true);
 }
 
 void chip8_emulator_draw_tui(void* self)
@@ -24,7 +24,7 @@ void chip8_emulator_draw_tui(void* self)
     for(int i = 0; i < 32; i++)
     {
         for(int j = 0; j < 64; j++)
-            printf("#");
+            printf("%c", (char)219u);
         printf("\n");
     }
 }
