@@ -26,7 +26,7 @@ typedef struct
 {
     bool running;
     void** instruction_cache;
-    void (*display_function)(void*);
+    void (*display_function)(void*, double);
     void (*free_display)(void*);
     CHIP8Memory* memory;
 } CHIP8Emulator;
@@ -34,6 +34,6 @@ typedef struct
 CHIP8EmulatorConfig* chip8_config_parse(FILE*);
 CHIP8Emulator* chip8_emulator_initialize(CHIP8EmulatorConfig*);
 void chip8_emulator_update(CHIP8Emulator*, double);
-void chip8_emulator_draw(CHIP8Emulator*);
+void chip8_emulator_draw(CHIP8Emulator*, double);
 void chip8_config_free(void*);
 void chip8_emulator_free(void*);

@@ -19,7 +19,7 @@ void (*const chip8_draw_free_cache[])(void*) = {
     chip8_emulator_free_display_tui
 };
 
-void (*const chip8_draw_cache[])(void*) = {
+void (*const chip8_draw_cache[])(void*, double) = {
     chip8_emulator_draw_none,
     chip8_emulator_draw_tui
 };
@@ -124,9 +124,9 @@ CHIP8Emulator* chip8_emulator_initialize(CHIP8EmulatorConfig* config)
     return emulator;
 }
 
-void chip8_emulator_draw(CHIP8Emulator* self)
+void chip8_emulator_draw(CHIP8Emulator* self, double delta)
 {
-    self->display_function(self);
+    self->display_function(self, delta);
 }
 
 void chip8_config_free(void* pointer)

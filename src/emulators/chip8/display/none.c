@@ -15,7 +15,7 @@ void chip8_emulator_free_display_none(void* self)
     // Do nothing.
 }
 
-void chip8_emulator_draw_none(void* self)
+void chip8_emulator_draw_none(void* self, double delta)
 {
     // Do nothing.
 }

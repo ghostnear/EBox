@@ -17,7 +17,7 @@ void chip8_emulator_free_display_tui(void* self)
     tui_display_cursor(true);
 }
 
-void chip8_emulator_draw_tui(void* self)
+void chip8_emulator_draw_tui(void* self, double delta)
 {
     tui_set_cursor_position(0, 0);
 
@@ -32,4 +32,5 @@ void chip8_emulator_draw_tui(void* self)
         }
         printf("\033[0m\n");
     }
+    printf("Current framerate: %f\n", 1.0 / delta);
 }

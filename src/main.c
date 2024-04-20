@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <SDL_timer.h>
+
 #include "utils/logging.h"
 #include "emulators/chip8/core.h"
 
@@ -17,10 +19,21 @@ int main(int argc, char* argv[])
 
     chip8_config_free(config);
 
+    uint64_t now = SDL_GetPerformanceCounter();
+    uint64_t last = 0;
+    double delta = 0;
+
     while(emulator->running)
     {
-        chip8_emulator_update(emulator, 0);
-        chip8_emulator_draw(emulator);
+        last = now;
+        now = SDL_GetPerformanceCounter();
+
+        delta = (double)((now - last) / (double)SDL_GetPerformanceFrequency());
+
+        chip8_emulator_update(emulator, delta);
+        chip8_emulator_draw(emulator, delta);
+
+        SDL_Delay(4);
     }
     
     return EXIT_SUCCESS;
