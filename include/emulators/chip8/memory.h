@@ -6,6 +6,10 @@ typedef struct
 {
    uint16_t pc;
    uint16_t i;
+   uint8_t sp;
+   uint8_t sound_timer;
+   uint8_t delta_timer;
+   uint16_t* stack;
    uint8_t* memory;
    uint8_t* vram;
    uint8_t* v;

@@ -8,6 +8,7 @@
 
 void chip8_emulator_init_display_tui(void* self)
 {
+    tui_clear_screen();
     tui_display_cursor(false);
 }
 
@@ -20,11 +21,15 @@ void chip8_emulator_draw_tui(void* self)
 {
     tui_set_cursor_position(0, 0);
 
-    // TODO: replace this with actual printing.
-    for(int i = 0; i < 32; i++)
+    for(int y_pos = 0; y_pos < 32; y_pos++)
     {
-        for(int j = 0; j < 64; j++)
-            printf("%c", (char)219u);
-        printf("\n");
+        for(int x_pos = 0; x_pos < 64; x_pos++)
+        {
+            if(((CHIP8Emulator*)self)->memory->vram[y_pos * 64 + x_pos])
+                printf("\033[7m ");
+            else
+                printf("\033[0m ");
+        }
+        printf("\033[0m\n");
     }
 }
