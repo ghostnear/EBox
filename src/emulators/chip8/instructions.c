@@ -175,16 +175,19 @@ void chip8_emulator_step(CHIP8Emulator* self)
 
     OR_VX_VY: {
         VX(opcode) |= VY(opcode);
+        V(0xF) = 0;
         goto END;
     }
 
     AND_VX_VY: {
         VX(opcode) &= VY(opcode);
+        V(0xF) = 0;
         goto END;
     }
 
     XOR_VX_VY: {
         VX(opcode) ^= VY(opcode);
+        V(0xF) = 0;
         goto END;
     }
 
@@ -204,8 +207,8 @@ void chip8_emulator_step(CHIP8Emulator* self)
     }
 
     SHR_VX: {
-        uint8_t VF = VX(opcode) & 0x1;
-        VX(opcode) >>= 1;
+        uint8_t VF = VY(opcode) & 0x1;
+        VX(opcode) = VY(opcode) >> 1;
         V(0xF) = VF;
         goto END;
     }
@@ -218,8 +221,8 @@ void chip8_emulator_step(CHIP8Emulator* self)
     }
 
     SHL_VX: {
-        uint8_t VF = (VX(opcode) & 0x80) >> 7;
-        VX(opcode) <<= 1;
+        uint8_t VF = (VY(opcode) & 0x80) >> 7;
+        VX(opcode) = VY(opcode) << 1;
         V(0xF) = VF;
         goto END;
     }
@@ -257,7 +260,13 @@ void chip8_emulator_step(CHIP8Emulator* self)
             for(uint8_t x = 0; x < 8; x++)
                 if((sprite_byte & (1 << (7 - x))) != 0)
                 {
-                    int pixel_index = (VY(opcode) + y) * 64 + (VX(opcode) + x);
+                    uint8_t x_pos = VX(opcode) % 64 + x;
+                    uint8_t y_pos = VY(opcode) % 32 + y;
+
+                    if(x_pos >= 64 || y_pos >= 32)
+                        continue;
+
+                    uint16_t pixel_index = x_pos + y_pos * 64;
 
                     if(self->memory->vram[pixel_index] == 1)
                         V(0xF) = 1;
@@ -269,14 +278,14 @@ void chip8_emulator_step(CHIP8Emulator* self)
     }
 
     SKP: {
-        /*if(self->input->keys[VX(opcode)])
-            PC() += 2;*/
+        if(self->memory->keys[VX(opcode)])
+            PC() += 2;
         goto END;
     }
 
     SKNP: {
-        /*if(!self->input->keys[VX(opcode)])
-            PC() += 2;*/
+        if(!self->memory->keys[VX(opcode)])
+            PC() += 2;
         goto END;
     }
 
@@ -286,10 +295,10 @@ void chip8_emulator_step(CHIP8Emulator* self)
     }
 
     LD_VX_K: {
-        /*bool key_pressed = false;
+        bool key_pressed = false;
 
         for(uint8_t i = 0; i < 16; i++)
-            if(self->input->keys[i])
+            if(self->memory->keys[i])
             {
                 VX(opcode) = i;
                 key_pressed = true;
@@ -297,7 +306,8 @@ void chip8_emulator_step(CHIP8Emulator* self)
             }
 
         if(!key_pressed)
-            PC() -= 2;*/
+            PC() -= 2;
+        
         goto END;
     }
 
@@ -332,12 +342,14 @@ void chip8_emulator_step(CHIP8Emulator* self)
     LD_I_VX: {
         for(uint8_t index = 0; index <= X(opcode); index++)
             self->memory->memory[I() + index] = V(index);
+        I() += X(opcode) + 1;
         goto END;
     }
 
     LD_VX_I: {
         for(uint8_t index = 0; index <= X(opcode); index++)
             V(index) = self->memory->memory[I() + index];
+        I() += X(opcode) + 1;
         goto END;
     }
 
@@ -361,6 +373,8 @@ void chip8_emulator_update(CHIP8Emulator* self, double delta_time)
     self->timer += delta_time;
     self->extra_timer += delta_time;
 
+    // TODO: this is definatelly not right, but alas.
+
     while(self->extra_timer >= 1.0 / 60.0)
     {
         self->memory->delta_timer -= (self->memory->delta_timer > 0);
@@ -368,7 +382,7 @@ void chip8_emulator_update(CHIP8Emulator* self, double delta_time)
         self->extra_timer -= 1.0 / 60.0;
     }
 
-    while(self->timer >= 1.0 / self->speed)
+    while(self->timer >= 1.0 / self->speed && self->running)
     {
         chip8_emulator_step(self);
         self->timer -= 1.0 / self->speed;

@@ -13,6 +13,7 @@ typedef struct
    uint16_t* stack;
    uint8_t* memory;
    uint8_t* vram;
+   uint8_t* keys;
    uint8_t* v;
    bool draw_flag;
 } CHIP8Memory;

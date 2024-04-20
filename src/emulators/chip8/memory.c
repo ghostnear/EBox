@@ -11,6 +11,7 @@ CHIP8Memory* chip8_memory_initialize()
     memory->vram = calloc(0x40 * 0x20, sizeof(uint8_t));
     memory->v = calloc(0x10, sizeof(uint8_t));
     memory->stack = calloc(0x10, sizeof(uint16_t));
+    memory->keys = calloc(0x10, sizeof(uint8_t));
 
     return memory;
 }
@@ -38,5 +39,6 @@ void chip8_memory_free(void* pointer)
     free(memory->vram);
     free(memory->v);
     free(memory->stack);
+    free(memory->keys);
     free((void*)memory);
 }
