@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <stdbool.h>
 
 typedef struct
 {
@@ -13,6 +14,7 @@ typedef struct
    uint8_t* memory;
    uint8_t* vram;
    uint8_t* v;
+   bool draw_flag;
 } CHIP8Memory;
 
 CHIP8Memory* chip8_memory_initialize();

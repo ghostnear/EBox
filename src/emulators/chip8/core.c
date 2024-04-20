@@ -45,6 +45,15 @@ CHIP8EmulatorConfig* chip8_config_parse(FILE* file)
         exit(-1);
     }
     config->path = strdup(path);
+
+    const char* speed = ini_file_get_string(input, "ROM", "Speed");
+    if(speed == NULL)
+    {
+        show_simple_error_messagebox("Error!", "Speed has not been specified in startup config!");
+        chip8_config_free(config);
+        exit(-1);
+    }
+    config->speed = atoi(speed);
     
     const char* display_type = ini_file_get_string(input, "System", "Display");
     if(display_type == NULL)
@@ -120,6 +129,10 @@ CHIP8Emulator* chip8_emulator_initialize(CHIP8EmulatorConfig* config)
     chip8_draw_init_cache[config->display_type]((void*)emulator);    
     emulator->display_function = chip8_draw_cache[config->display_type];
     emulator->free_display = chip8_draw_free_cache[config->display_type];
+
+    emulator->speed = config->speed;
+    emulator->timer = 0;
+    emulator->extra_timer = 0;
 
     return emulator;
 }

@@ -246,6 +246,7 @@ void chip8_emulator_step(CHIP8Emulator* self)
     }
 
     DRW: {
+        self->memory->draw_flag = true;
         V(0xF) = 0;
 
         // TODO: replace the sprite representation in bytes to bits.
@@ -268,14 +269,12 @@ void chip8_emulator_step(CHIP8Emulator* self)
     }
 
     SKP: {
-        fprintf(logging_get_file(), "[ WARN]: Key input not implemented!\n");
         /*if(self->input->keys[VX(opcode)])
             PC() += 2;*/
         goto END;
     }
 
     SKNP: {
-        fprintf(logging_get_file(), "[ WARN]: Key input not implemented!\n");
         /*if(!self->input->keys[VX(opcode)])
             PC() += 2;*/
         goto END;
@@ -287,7 +286,6 @@ void chip8_emulator_step(CHIP8Emulator* self)
     }
 
     LD_VX_K: {
-        fprintf(logging_get_file(), "[ WARN]: Key input not implemented!\n");
         /*bool key_pressed = false;
 
         for(uint8_t i = 0; i < 16; i++)
@@ -357,5 +355,22 @@ void chip8_emulator_step(CHIP8Emulator* self)
 
 void chip8_emulator_update(CHIP8Emulator* self, double delta_time)
 {
-    chip8_emulator_step(self);
+    if(!self->running)
+        return;
+
+    self->timer += delta_time;
+    self->extra_timer += delta_time;
+
+    while(self->extra_timer >= 1.0 / 60.0)
+    {
+        self->memory->delta_timer -= (self->memory->delta_timer > 0);
+        self->memory->sound_timer -= (self->memory->sound_timer > 0);
+        self->extra_timer -= 1.0 / 60.0;
+    }
+
+    while(self->timer >= 1.0 / self->speed)
+    {
+        chip8_emulator_step(self);
+        self->timer -= 1.0 / self->speed;
+    }
 }

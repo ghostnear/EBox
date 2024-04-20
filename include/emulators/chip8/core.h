@@ -17,6 +17,7 @@ typedef struct
 {
 // ROM
     char* path;
+    uint32_t speed; // In instructions per second.
 
 // System
     CHIP8DisplayType display_type;
@@ -25,9 +26,15 @@ typedef struct
 typedef struct 
 {
     bool running;
+    
+    double timer;
+    double extra_timer;
+    uint32_t speed;
+
     void** instruction_cache;
     void (*display_function)(void*, double);
     void (*free_display)(void*);
+    
     CHIP8Memory* memory;
 } CHIP8Emulator;
 

@@ -29,6 +29,7 @@ find_package(SDL2 CONFIG REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(glm CONFIG REQUIRED)
 find_package(GLEW REQUIRED)
+find_package(Curses REQUIRED)
 
 target_link_libraries(
 	${PROJECT_NAME}
@@ -37,6 +38,7 @@ target_link_libraries(
 		OpenGL::GL glm::glm
 		$<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>
         $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>
+        ncurses
 )
 
 target_compile_options(

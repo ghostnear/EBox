@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
         chip8_emulator_update(emulator, delta);
         chip8_emulator_draw(emulator, delta);
 
-        SDL_Delay(4);
+        SDL_Delay(15);
     }
     
     return EXIT_SUCCESS;
