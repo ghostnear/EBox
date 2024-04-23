@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <time.h>
 #include <SDL_timer.h>
 
 #include "utils/logging.h"
@@ -8,6 +9,8 @@
 
 int main(int argc, char* argv[])
 {
+    srand(time(NULL));
+
     atexit(memfree_all);
 
     logging_set_file(fopen("last.log", "w"));
