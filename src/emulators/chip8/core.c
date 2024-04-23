@@ -152,6 +152,42 @@ CHIP8Emulator* chip8_emulator_initialize(CHIP8EmulatorConfig* config)
     return emulator;
 }
 
+int chip8_main_loop(char* configPath)
+{
+    FILE* emuConfig = fopen(configPath, "r");
+    if(emuConfig == NULL)
+    {
+        fprintf(stderr, "[ERROR]: Couldn't open config file %s.\n", configPath);
+        return EXIT_FAILURE;
+    }
+
+    CHIP8EmulatorConfig* config = chip8_config_parse(emuConfig);
+
+    CHIP8Emulator* emulator = chip8_emulator_initialize(config);
+    memfree_add(emulator, chip8_emulator_free);
+
+    chip8_config_free(config);
+
+    uint64_t now = SDL_GetPerformanceCounter();
+    uint64_t last = 0;
+    double delta = 0;
+
+    while(emulator->running || emulator->window_is_running())
+    {
+        last = now;
+        now = SDL_GetPerformanceCounter();
+
+        delta = (double)((now - last) / (double)SDL_GetPerformanceFrequency());
+
+        chip8_emulator_update(emulator, delta);
+        chip8_emulator_draw(emulator, delta);
+
+        SDL_Delay(15);
+    }
+    
+    return EXIT_SUCCESS;
+}
+
 void chip8_emulator_draw(CHIP8Emulator* self, double delta)
 {
     self->display_function(self, delta);

@@ -31,16 +31,10 @@ clean:
 	@cmake -E remove_directory build
 	@cmake -E remove_directory bin
 	@echo "[CMAKE]: Cleaning done!"
-
-run-debug:
-	@echo "[CMAKE]: Running Debug build..."
-	@./bin/EBox
-
-run-release:
-	@echo "[CMAKE]: Running Release build..."
-	@./bin/EBox
-
-run: run-debug
+	
+run:
+	@echo "[CMAKE]: Running app..."
+	@./bin/EBox CHIP8 ./defaults/chip8.cfg
 
 memcheck-windows:
 	@echo "[CMAKE]: Running DrMemory..."

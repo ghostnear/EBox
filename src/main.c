@@ -9,35 +9,30 @@
 
 int main(int argc, char* argv[])
 {
-    srand(time(NULL));
-
     atexit(memfree_all);
+
+    if(argc < 2)
+    {
+        fprintf(stderr, "No ROM file specified or emulator type.\n");
+        fprintf(stderr, "Usage: %s <emulator type> <emulator config file>\n", argv[0]);
+        return EXIT_FAILURE;
+    }
+
+    if(argc < 3)
+    {
+        fprintf(stderr, "No emulator config file specified.\n");
+        fprintf(stderr, "Usage: %s <emulator type> <emulator config file>\n", argv[0]);
+        return EXIT_FAILURE;
+    }
+
+    srand(time(NULL));
 
     logging_set_file(fopen("last.log", "w"));
 
-    CHIP8EmulatorConfig* config = chip8_config_parse(fopen("defaults/chip8.cfg", "r"));
-
-    CHIP8Emulator* emulator = chip8_emulator_initialize(config);
-    memfree_add(emulator, chip8_emulator_free);
-
-    chip8_config_free(config);
-
-    uint64_t now = SDL_GetPerformanceCounter();
-    uint64_t last = 0;
-    double delta = 0;
-
-    while(emulator->running || emulator->window_is_running())
-    {
-        last = now;
-        now = SDL_GetPerformanceCounter();
-
-        delta = (double)((now - last) / (double)SDL_GetPerformanceFrequency());
-
-        chip8_emulator_update(emulator, delta);
-        chip8_emulator_draw(emulator, delta);
-
-        SDL_Delay(15);
+    if(!strcmp(argv[1], "CHIP8"))
+        return chip8_main_loop(argv[2]);
+    else {
+        fprintf(stderr, "Unknown emulator type %s.\n", argv[1]);
+        return EXIT_FAILURE;
     }
-    
-    return EXIT_SUCCESS;
 }

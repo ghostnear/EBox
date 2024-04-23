@@ -42,6 +42,7 @@ typedef struct
 
 CHIP8EmulatorConfig* chip8_config_parse(FILE*);
 CHIP8Emulator* chip8_emulator_initialize(CHIP8EmulatorConfig*);
+int chip8_main_loop(char*);
 void chip8_emulator_update(CHIP8Emulator*, double);
 void chip8_emulator_draw(CHIP8Emulator*, double);
 void chip8_config_free(void*);
