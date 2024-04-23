@@ -295,17 +295,24 @@ void chip8_emulator_step(CHIP8Emulator* self)
     }
 
     LD_VX_K: {
-        bool key_pressed = false;
+        static uint8_t key = 0xFF;
 
         for(uint8_t i = 0; i < 16; i++)
             if(self->memory->keys[i])
             {
-                VX(opcode) = i;
-                key_pressed = true;
+                key = i;
                 break;
             }
 
-        if(!key_pressed)
+        if(key != 0xFF)
+        {
+            if(!self->memory->keys[key])
+            {
+                VX(opcode) = key;
+                key = 0xFF;
+            }
+        }
+        else
             PC() -= 2;
         
         goto END;
@@ -356,8 +363,7 @@ void chip8_emulator_step(CHIP8Emulator* self)
     UNKNOWN: {
         show_simple_error_messagebox("Error!", "Unknown opcode encountered!");
         fprintf(logging_get_file(), "[ERROR]: Unknown opcode at PC 0x%04X encountered: 0x%04X\n", PC(), opcode);
-        self->running = false;
-        goto END;
+        exit(0);
     }
 
     END: {
