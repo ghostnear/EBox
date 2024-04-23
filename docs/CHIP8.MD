@@ -12,6 +12,7 @@
     - [ ] 4-flags-4.1.ch8
         - Looks like a regression in the ROM as I couldn't find anything wrong myself.
     - [ ] 5-quirks.ch8
+        - Fails the 60hz display test, everything else works.
     - [x] 6-keypad.ch8
         - Key 0x3 specifically doesn't work for some reason, probably another regression in the test ROM.
     - [ ] 7-beep.ch8
