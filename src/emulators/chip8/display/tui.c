@@ -8,6 +8,8 @@
 #include <stdlib.h>
 #include <memory.h>
 
+#include "utils/logging.h"
+
 // TODO: make this support colors and stuff.
 
 void chip8_emulator_init_display_tui(void* self)
@@ -29,6 +31,9 @@ void chip8_emulator_init_display_tui(void* self)
 void chip8_emulator_free_display_tui(void* self)
 {   
     curs_set(1);
+
+    FILE* log_file = logging_get_file();
+    fprintf(log_file, "[ INFO]: TUI window destroyed.\n");
 }
 
 void chip8_emulator_update_input(CHIP8Emulator* self)

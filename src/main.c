@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
     uint64_t last = 0;
     double delta = 0;
 
-    while(emulator->running)
+    while(emulator->running || emulator->window_is_running())
     {
         last = now;
         now = SDL_GetPerformanceCounter();

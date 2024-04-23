@@ -34,6 +34,8 @@ typedef struct
     void** instruction_cache;
     void (*display_function)(void*, double);
     void (*free_display)(void*);
+
+    bool (*window_is_running)();
     
     CHIP8Memory* memory;
 } CHIP8Emulator;

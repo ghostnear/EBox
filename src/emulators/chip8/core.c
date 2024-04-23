@@ -9,19 +9,32 @@
 #include "utils/message_box.h"
 #include "utils/logging.h"
 
+bool chip8_emulator_is_running_irrelevant() {
+    return false;
+}
+
 void (*const chip8_draw_init_cache[])(void*) = {
     chip8_emulator_init_display_none,
-    chip8_emulator_init_display_tui
+    chip8_emulator_init_display_tui,
+    chip8_emulator_init_display_sdl
 };
 
 void (*const chip8_draw_free_cache[])(void*) = {
     chip8_emulator_free_display_none,
-    chip8_emulator_free_display_tui
+    chip8_emulator_free_display_tui,
+    chip8_emulator_free_display_sdl
 };
 
 void (*const chip8_draw_cache[])(void*, double) = {
     chip8_emulator_draw_none,
-    chip8_emulator_draw_tui
+    chip8_emulator_draw_tui,
+    chip8_emulator_draw_sdl
+};
+
+bool (*const chip8_is_running_cache[])() = {
+    chip8_emulator_is_running_irrelevant,
+    chip8_emulator_is_running_irrelevant,
+    chip8_emulator_is_running_sdl
 };
 
 CHIP8EmulatorConfig* chip8_config_parse(FILE* file)
@@ -129,6 +142,8 @@ CHIP8Emulator* chip8_emulator_initialize(CHIP8EmulatorConfig* config)
     chip8_draw_init_cache[config->display_type]((void*)emulator);    
     emulator->display_function = chip8_draw_cache[config->display_type];
     emulator->free_display = chip8_draw_free_cache[config->display_type];
+
+    emulator->window_is_running = chip8_is_running_cache[config->display_type];
 
     emulator->speed = config->speed;
     emulator->timer = 0;
