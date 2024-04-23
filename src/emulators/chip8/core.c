@@ -6,8 +6,9 @@
 
 #include "utils/file.h"
 #include "utils/inifile.h"
-#include "utils/message_box.h"
 #include "utils/logging.h"
+
+#include <SDL2/SDL.h>
 
 bool chip8_emulator_is_running_irrelevant() {
     return false;
@@ -41,7 +42,7 @@ CHIP8EmulatorConfig* chip8_config_parse(FILE* file)
 {
     if(file == NULL)
     {
-        show_simple_error_messagebox("Error!", "Inexistent file sent to CHIP8 config parser.");
+        fprintf(stderr, "Error: Inexistent file sent to CHIP8 config parser.\n");
         exit(-1);
     }
 
@@ -53,7 +54,7 @@ CHIP8EmulatorConfig* chip8_config_parse(FILE* file)
     const char* path = ini_file_get_string(input, "ROM", "Path");
     if(path == NULL)
     {
-        show_simple_error_messagebox("Error!", "Path has not been specified in startup config!");
+        fprintf(stderr, "Error: Path has not been specified in startup config!\n");
         chip8_config_free(config);
         exit(-1);
     }
@@ -62,7 +63,7 @@ CHIP8EmulatorConfig* chip8_config_parse(FILE* file)
     const char* speed = ini_file_get_string(input, "ROM", "Speed");
     if(speed == NULL)
     {
-        show_simple_error_messagebox("Error!", "Speed has not been specified in startup config!");
+        fprintf(stderr, "Error: Speed has not been specified in startup config!\n");
         chip8_config_free(config);
         exit(-1);
     }
@@ -71,7 +72,7 @@ CHIP8EmulatorConfig* chip8_config_parse(FILE* file)
     const char* display_type = ini_file_get_string(input, "System", "Display");
     if(display_type == NULL)
     {
-        show_simple_error_messagebox("Error!", "Display type has not been specified in startup config!");
+        fprintf(stderr, "Error: Display type has not been specified in startup config!\n");
         chip8_config_free(config);
         exit(-1);
     }
@@ -84,7 +85,7 @@ CHIP8EmulatorConfig* chip8_config_parse(FILE* file)
         config->display_type = CHIP8_DISPLAY_SDL;
     else
     {
-        show_simple_error_messagebox("Error!", "Invalid display type specified in startup config!");
+        fprintf(stderr, "Error: Invalid display type specified in startup config!\n");
         chip8_config_free(config);
         exit(-1);
     }
@@ -103,7 +104,7 @@ CHIP8Emulator* chip8_emulator_initialize(CHIP8EmulatorConfig* config)
     FILE* rom = fopen(config->path, "rb");
     if(rom == NULL)
     {
-        show_simple_error_messagebox("Error!", "The ROM file does not exist!");
+        fprintf(stderr, "Error: The ROM file does not exist!\n");
         exit(-1);
     }
 
@@ -115,7 +116,7 @@ CHIP8Emulator* chip8_emulator_initialize(CHIP8EmulatorConfig* config)
 
     if(rom_size > memory_size - mount_point)
     {
-        show_simple_error_messagebox("Error!", "File is too big to be a CHIP8 ROM!");
+        fprintf(stderr, "Error: File is too big to be a CHIP8 ROM!\n");
         fclose(rom);
         exit(-1);
     }

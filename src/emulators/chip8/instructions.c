@@ -1,8 +1,9 @@
 #include "emulators/chip8/core.h"
 
 #include <stdio.h>
+#include <memory.h>
+#include <stdlib.h>
 
-#include "utils/message_box.h"
 #include "utils/logging.h"
 
 #define   I()        self->memory->i
@@ -361,7 +362,6 @@ void chip8_emulator_step(CHIP8Emulator* self)
     }
 
     UNKNOWN: {
-        show_simple_error_messagebox("Error!", "Unknown opcode encountered!");
         fprintf(logging_get_file(), "[ERROR]: Unknown opcode at PC 0x%04X encountered: 0x%04X\n", PC(), opcode);
         exit(0);
     }

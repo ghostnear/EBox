@@ -7,7 +7,6 @@
 
 #include "emulators/chip8/core.h"
 #include "utils/logging.h"
-#include "utils/message_box.h"
 
 SDL_Renderer* renderer = NULL;
 SDL_Window* window = NULL;
@@ -26,7 +25,6 @@ void chip8_emulator_init_display_sdl(void* self)
     if(window == NULL || renderer == NULL)
     {
         FILE* log_file = logging_get_file();
-        show_simple_error_messagebox("Error!", "Could not create SDL window, check the logs for more details.");
         fprintf(log_file, "[ERROR]: SDL_CreateWindow failed: %s\n", SDL_GetError());
     }
 
