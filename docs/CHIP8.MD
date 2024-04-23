@@ -16,4 +16,6 @@
     - [x] 6-keypad.ch8
         - Key 0x3 specifically doesn't work for some reason, probably another regression in the test ROM.
     - [ ] 7-beep.ch8
+        - Audio not implemented.
     - [ ] 8-scrolling.ch8
+        - NOT PLANNED.
