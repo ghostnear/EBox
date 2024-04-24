@@ -34,7 +34,7 @@ clean:
 	
 run:
 	@echo "[CMAKE]: Running app..."
-	@./bin/EBox CHIP8 ./defaults/chip8.cfg
+	@./bin/EBox PS1 ./defaults/PS1.cfg
 
 memcheck-windows:
 	@echo "[CMAKE]: Running DrMemory..."

@@ -379,7 +379,7 @@ void chip8_emulator_update(CHIP8Emulator* self, double delta_time)
     self->timer += delta_time;
     self->extra_timer += delta_time;
 
-    // TODO: this is definatelly not right, but alas.
+    // TODO: this is definatelly not right, but alas it works.
 
     while(self->extra_timer >= 1.0 / 60.0)
     {

@@ -104,7 +104,7 @@ CHIP8Emulator* chip8_emulator_initialize(CHIP8EmulatorConfig* config)
     FILE* rom = fopen(config->path, "rb");
     if(rom == NULL)
     {
-        fprintf(stderr, "Error: The ROM file does not exist!\n");
+        fprintf(stderr, "Error: The ROM file at path %s does not exist!\n", config->path);
         exit(-1);
     }
 

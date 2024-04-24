@@ -1,11 +1,9 @@
-#include <stdio.h>
-#include <stdlib.h>
-
 #include <time.h>
 #include <SDL_timer.h>
 
+#include "emulators/ps1/core.h"
 #include "utils/logging.h"
-#include "emulators/chip8/core.h"
+#include "emulators/all.h"
 
 int main(int argc, char* argv[])
 {
@@ -31,6 +29,8 @@ int main(int argc, char* argv[])
 
     if(!strcmp(argv[1], "CHIP8"))
         return chip8_main_loop(argv[2]);
+    else if(!strcmp(argv[1], "PS1"))
+        return ps1_main_loop(argv[2]);
     else {
         fprintf(stderr, "Unknown emulator type %s.\n", argv[1]);
         return EXIT_FAILURE;

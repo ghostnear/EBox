@@ -1,17 +1,7 @@
 #pragma once
 
-#include <stdio.h>
-#include <stdint.h>
-#include <stdbool.h>
-
 #include "memory.h"
 #include "display/all.h"
-
-typedef enum {
-    CHIP8_DISPLAY_NONE = 0,
-    CHIP8_DISPLAY_TUI,
-    CHIP8_DISPLAY_SDL
-} CHIP8DisplayType;
 
 typedef struct
 {
