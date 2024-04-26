@@ -1,3 +1,5 @@
+#ifndef BUILD_PLATFORM_VITA
+
 #include "emulators/chip8/core.h"
 
 #include <curses.h>
@@ -81,3 +83,5 @@ void chip8_emulator_draw_tui(void* self, double delta)
     addch('\n');
     refresh();
 }
+
+#endif

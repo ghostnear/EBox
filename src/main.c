@@ -1,7 +1,6 @@
 #include <time.h>
-#include <SDL_timer.h>
+#include <SDL2/SDL_timer.h>
 
-#include "emulators/ps1/core.h"
 #include "utils/logging.h"
 #include "emulators/all.h"
 
@@ -25,12 +24,14 @@ int main(int argc, char* argv[])
 
     srand(time(NULL));
 
-    logging_set_file(fopen("last.log", "w"));
+    logging_set_file(fopen(LOGGING_DEFAULT_PATH, "w"));
 
     if(!strcmp(argv[1], "CHIP8"))
         return chip8_main_loop(argv[2]);
     else if(!strcmp(argv[1], "PS1"))
         return ps1_main_loop(argv[2]);
+    else if(!strcmp(argv[1], "GB"))
+        return gb_main_loop(argv[2]);
     else {
         fprintf(stderr, "Unknown emulator type %s.\n", argv[1]);
         return EXIT_FAILURE;

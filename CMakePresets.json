@@ -3,12 +3,11 @@
     "configurePresets": [
       {
         "name": "windows-base",
-        "generator": "Unix Makefiles",
+        "generator": "Ninja",
         "binaryDir": "${sourceDir}/build",
         "cacheVariables": {
           "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
           "VCPKG_TARGET_TRIPLET": "x64-windows",
-          "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
           "CMAKE_BUILD_PLATFORM": "WINDOWS",
           "CMAKE_BUILD_ARCH": "x64"
         } 
@@ -29,10 +28,9 @@
       },
       {
         "name": "unix-base",
-        "generator": "Unix Makefiles",
+        "generator": "Ninja",
         "binaryDir": "${sourceDir}/build",
         "cacheVariables": {
-          "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
           "CMAKE_BUILD_PLATFORM": "UNIX",
           "CMAKE_BUILD_ARCH": "x64"
         } 
@@ -47,6 +45,29 @@
       {
         "name": "unix-release",
         "inherits": "unix-base",
+        "cacheVariables": {
+          "CMAKE_BUILD_TYPE": "Release"
+        }
+      },
+      {
+        "name": "vita-base",
+        "generator": "Ninja",
+        "binaryDir": "${sourceDir}/build",
+        "cacheVariables": {
+          "CMAKE_BUILD_PLATFORM": "VITA",
+          "CMAKE_BUILD_ARCH": "armv7"
+        } 
+      },
+      {
+        "name": "vita-debug",
+        "inherits": "vita-base",
+        "cacheVariables": {
+          "CMAKE_BUILD_TYPE": "Debug"
+        }
+      },
+      {
+        "name": "vita-release",
+        "inherits": "vita-base",
         "cacheVariables": {
           "CMAKE_BUILD_TYPE": "Release"
         }

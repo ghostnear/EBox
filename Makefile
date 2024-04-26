@@ -1,7 +1,17 @@
-.PHONY: build build-release build-debug clean test run
+.PHONY: all
 
 build-windows: build-windows-debug
 	@echo "[CMAKE]: Building done!"
+
+build-windows-release:
+	@echo "[CMAKE]: Building in Release mode on Windows..."
+	@cmake -B build -S . --preset windows-release
+	@cmake --build build
+
+build-windows-debug:
+	@echo "[CMAKE]: Building in Debug mode on Windows..."
+	@cmake -B build -S . --preset windows-debug
+	@cmake --build build
 
 build-unix: build-unix-debug
 	@echo "[CMAKE]: Building done!"
@@ -16,14 +26,17 @@ build-unix-debug:
 	@cmake -B build -S . --preset unix-debug
 	@cmake --build build
 
-build-windows-release:
-	@echo "[CMAKE]: Building in Release mode on Windows..."
-	@cmake -B build -S . --preset windows-release
+build-vita: build-vita-release
+	@echo "[CMAKE]: Building done!"
+
+build-vita-release:
+	@echo "[CMAKE]: Building in Release mode on Vita..."
+	@cmake -B build -S . --preset vita-release
 	@cmake --build build
 
-build-windows-debug:
-	@echo "[CMAKE]: Building in Debug mode on Windows..."
-	@cmake -B build -S . --preset windows-debug
+build-vita-debug:
+	@echo "[CMAKE]: Building in Debug mode on Vita..."
+	@cmake -B build -S . --preset vita-debug
 	@cmake --build build
 
 clean:
@@ -34,7 +47,11 @@ clean:
 	
 run:
 	@echo "[CMAKE]: Running app..."
-	@./bin/EBox PS1 ./defaults/PS1.cfg
+	@./bin/EBox CHIP8 ./defaults/CHIP8.cfg
+
+run-vita:
+	@echo "[CMAKE]: Running app on Vita..."
+	@vita3k ./build/EBox.vpk
 
 memcheck-windows:
 	@echo "[CMAKE]: Running DrMemory..."

@@ -9,7 +9,7 @@
     - [x] 2-ibm-logo.ch8
     - [x] 3-corax+.ch8
     - [x] 4-flags.ch8
-        - Looks like there is a regression in the 4.1 ROM as I couldn't find anything wrong myself?
+        - Looks like there is a regression in the 4.1 ROM as I couldn't find anything wrong myself? And 4.0 works properly.
     - [ ] 5-quirks.ch8
         - Fails the 60hz display test, everything else works.
     - [x] 6-keypad.ch8

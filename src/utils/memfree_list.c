@@ -1,7 +1,6 @@
 #include "utils/memfree_list.h"
 
 #include <stdlib.h>
-#include <stdio.h>
 
 static voidptr_list_node* allocated_list = NULL;
 
@@ -23,6 +22,7 @@ void voidptr_list_free_all_internal(voidptr_list_node** self)
         else
             free((*self)->pointer);
     }
+    // TODO: make this not recursive thanks.
     if((*self)->next != NULL)
         voidptr_list_free_all_internal((voidptr_list_node**)&((*self)->next));
     free(*self);

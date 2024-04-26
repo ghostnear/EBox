@@ -1,9 +1,9 @@
 #include "emulators/chip8/display/sdl.h"
 
 #include <SDL2/SDL.h>
-#include <SDL_events.h>
-#include <SDL_render.h>
-#include <SDL_video.h>
+#include <SDL2/SDL_events.h>
+#include <SDL2/SDL_render.h>
+#include <SDL2/SDL_video.h>
 
 #include "emulators/chip8/core.h"
 #include "utils/logging.h"
@@ -21,6 +21,8 @@ SDL_Event event;
 void chip8_emulator_init_display_sdl(void* self)
 {
     SDL_Init(SDL_INIT_EVERYTHING);
+
+    SDL_SetHint(SDL_HINT_RENDER_BATCHING, "1");
 
     SDL_CreateWindowAndRenderer(
         960, 540,
@@ -40,6 +42,7 @@ void chip8_emulator_init_display_sdl(void* self)
 
 void chip8_emulator_free_display_sdl(void* self)
 {
+    SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
 

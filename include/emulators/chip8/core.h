@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdio.h>
+
 #include "memory.h"
 #include "display/all.h"
 
