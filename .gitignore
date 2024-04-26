@@ -3,6 +3,8 @@ build/
 .cache/
 roms/
 
+.vscode/
+
 # Windows specifics.
 *.dll
 *.log
