@@ -21,17 +21,6 @@ PRIVATE
     ./include
 )
 
-target_compile_options(
-    ${PROJECT_NAME}
-PRIVATE
-    -Wall
-    -Wextra
-    -Werror
-    -Wno-unused-parameter
-    -Wno-unused-variable
-    -Wno-unused-function
-)
-
 include("cmake/libraries.cmake")
 
 include("cmake/post.cmake")

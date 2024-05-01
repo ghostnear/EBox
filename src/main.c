@@ -1,4 +1,5 @@
 #include <time.h>
+#include <SDL2/SDL_main.h>
 #include <SDL2/SDL_timer.h>
 
 #include "utils/logging.h"

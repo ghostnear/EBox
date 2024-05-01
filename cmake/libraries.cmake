@@ -31,13 +31,29 @@ else()
     set(OpenGL_GL_PREFERENCE "GLVND")
 
     find_package(SDL2 CONFIG REQUIRED)
-    find_package(Curses REQUIRED)
 
     target_link_libraries(
         ${PROJECT_NAME}
         PUBLIC
             $<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>
             $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>
-            ncurses
     )
+
+    if(CMAKE_BUILD_PLATFORM MATCHES "WINDOWS")
+        target_compile_options(
+            ${PROJECT_NAME}
+        PRIVATE
+        )
+    else()
+        target_compile_options(
+            ${PROJECT_NAME}
+        PRIVATE
+            -Wall
+            -Wextra
+            -Werror
+            -Wno-unused-parameter
+            -Wno-unused-variable
+            -Wno-unused-function
+        )
+    endif()
 endif()

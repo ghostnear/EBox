@@ -16,33 +16,21 @@ bool chip8_emulator_is_running_irrelevant() {
 
 void (*const chip8_draw_init_cache[])(void*) = {
     chip8_emulator_init_display_none,
-#ifndef BUILD_PLATFORM_VITA
-    chip8_emulator_init_display_tui,
-#endif
     chip8_emulator_init_display_sdl
 };
 
 void (*const chip8_draw_free_cache[])(void*) = {
     chip8_emulator_free_display_none,
-#ifndef BUILD_PLATFORM_VITA
-    chip8_emulator_free_display_tui,
-#endif
     chip8_emulator_free_display_sdl
 };
 
 void (*const chip8_draw_cache[])(void*, double) = {
     chip8_emulator_draw_none,
-#ifndef BUILD_PLATFORM_VITA
-    chip8_emulator_draw_tui,
-#endif
     chip8_emulator_draw_sdl
 };
 
 bool (*const chip8_is_running_cache[])() = {
     chip8_emulator_is_running_irrelevant,
-#ifndef BUILD_PLATFORM_VITA
-    chip8_emulator_is_running_irrelevant,
-#endif
     chip8_emulator_is_running_sdl
 };
 
@@ -87,10 +75,6 @@ CHIP8EmulatorConfig* chip8_config_parse(FILE* file)
 
     if(strcmp(display_type, "NONE") == 0)
         config->display_type = CHIP8_DISPLAY_NONE;
-#ifndef BUILD_PLATFORM_VITA
-    else if(strcmp(display_type, "TUI") == 0)
-        config->display_type = CHIP8_DISPLAY_TUI;
-#endif
     else if(strcmp(display_type, "SDL") == 0)
         config->display_type = CHIP8_DISPLAY_SDL;
     else

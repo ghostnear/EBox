@@ -1,6 +1,5 @@
 {
   "dependencies": [
-    "curses",
     "sdl2"
   ]
 }
