@@ -3,16 +3,12 @@
 #include <stdio.h>
 
 #include "memory.h"
-#include "display/all.h"
 
 typedef struct
 {
 // ROM
     char* path;
     uint32_t speed; // In instructions per second.
-
-// System
-    CHIP8DisplayType display_type;
 } CHIP8EmulatorConfig;
 
 typedef struct 
@@ -24,10 +20,6 @@ typedef struct
     uint32_t speed;
 
     void** instruction_cache;
-    void (*display_function)(void*, double);
-    void (*free_display)(void*);
-
-    bool (*window_is_running)();
     
     CHIP8Memory* memory;
 } CHIP8Emulator;

@@ -1,4 +1,4 @@
-#include "emulators/chip8/display/sdl.h"
+#include "emulators/chip8/display.h"
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_events.h>

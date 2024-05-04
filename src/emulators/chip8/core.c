@@ -4,35 +4,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "emulators/chip8/display.h"
 #include "utils/file.h"
 #include "utils/inifile.h"
 #include "utils/logging.h"
 
 #include <SDL2/SDL.h>
-
-bool chip8_emulator_is_running_irrelevant() {
-    return false;
-}
-
-void (*const chip8_draw_init_cache[])(void*) = {
-    chip8_emulator_init_display_none,
-    chip8_emulator_init_display_sdl
-};
-
-void (*const chip8_draw_free_cache[])(void*) = {
-    chip8_emulator_free_display_none,
-    chip8_emulator_free_display_sdl
-};
-
-void (*const chip8_draw_cache[])(void*, double) = {
-    chip8_emulator_draw_none,
-    chip8_emulator_draw_sdl
-};
-
-bool (*const chip8_is_running_cache[])() = {
-    chip8_emulator_is_running_irrelevant,
-    chip8_emulator_is_running_sdl
-};
 
 CHIP8EmulatorConfig* chip8_config_parse(FILE* file)
 {
@@ -64,25 +41,6 @@ CHIP8EmulatorConfig* chip8_config_parse(FILE* file)
         exit(-1);
     }
     config->speed = atoi(speed);
-    
-    const char* display_type = ini_file_get_string(input, "System", "Display");
-    if(display_type == NULL)
-    {
-        fprintf(stderr, "Error: Display type has not been specified in startup config!\n");
-        chip8_config_free(config);
-        exit(-1);
-    }
-
-    if(strcmp(display_type, "NONE") == 0)
-        config->display_type = CHIP8_DISPLAY_NONE;
-    else if(strcmp(display_type, "SDL") == 0)
-        config->display_type = CHIP8_DISPLAY_SDL;
-    else
-    {
-        fprintf(stderr, "Error: Invalid display type specified in startup config!\n");
-        chip8_config_free(config);
-        exit(-1);
-    }
 
     ini_file_free(input);
 
@@ -134,11 +92,7 @@ CHIP8Emulator* chip8_emulator_initialize(CHIP8EmulatorConfig* config)
 
     emulator->instruction_cache = calloc(memory_size, sizeof(void*));
 
-    chip8_draw_init_cache[config->display_type]((void*)emulator);    
-    emulator->display_function = chip8_draw_cache[config->display_type];
-    emulator->free_display = chip8_draw_free_cache[config->display_type];
-
-    emulator->window_is_running = chip8_is_running_cache[config->display_type];
+    chip8_emulator_init_display_sdl((void*)emulator);
 
     emulator->speed = config->speed;
     emulator->timer = 0;
@@ -167,7 +121,7 @@ int chip8_main_loop(char* configPath)
     uint64_t last = 0;
     double delta = 0;
 
-    while(emulator->running || emulator->window_is_running())
+    while(emulator->running || chip8_emulator_is_running_sdl())
     {
         last = now;
         now = SDL_GetPerformanceCounter();
@@ -185,7 +139,7 @@ int chip8_main_loop(char* configPath)
 
 void chip8_emulator_draw(CHIP8Emulator* self, double delta)
 {
-    self->display_function(self, delta);
+    chip8_emulator_draw_sdl(self, delta);
 }
 
 void chip8_config_free(void* pointer)
@@ -203,6 +157,6 @@ void chip8_emulator_free(void* pointer)
     const CHIP8Emulator* emulator = (CHIP8Emulator*) pointer;
     chip8_memory_free(emulator->memory);
     free(emulator->instruction_cache);
-    emulator->free_display((void*)emulator);
+    chip8_emulator_free_display_sdl((void*)emulator);
     free((void*)emulator);
 }
