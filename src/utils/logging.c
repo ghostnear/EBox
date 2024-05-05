@@ -1,6 +1,7 @@
 #include "utils/logging.h"
 #include "utils/memfree_list.h"
 
+#include <stdarg.h>
 #include <stdlib.h>
 
 typedef struct
@@ -39,4 +40,15 @@ FILE* logging_get_file()
         logger = create_log_file();
 
     return logger->file;
+}
+
+void log_print(const char* format, ...)
+{
+    if(logger == NULL)
+        logger = create_log_file();
+
+    va_list args;
+    va_start(args, format);
+    vfprintf(logger->file, format, args);
+    va_end(args);
 }

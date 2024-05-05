@@ -1,8 +1,9 @@
 #pragma once
 
+// Freeing callback to be used with memfree module.
 typedef void(*voidptr_list_free_callback)(void*);
 
-// This thing is more like a primitive garbage collector than anything else.
+// A primitive garbage collector's node used inside memfree.
 typedef struct {
     void* pointer;
     voidptr_list_free_callback free_callback;

@@ -1,14 +1,9 @@
-#include <time.h>
-#include <SDL2/SDL_main.h>
-#include <SDL2/SDL_timer.h>
-
-#include "utils/logging.h"
+#include "utils/all.h"
 #include "emulators/all.h"
 
 int main(int argc, char* argv[])
 {
-    atexit(memfree_all);
-
+    // Argument parsing.
     if(argc < 2)
     {
         fprintf(stderr, "No ROM file specified or emulator type.\n");
@@ -23,18 +18,21 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
     }
 
-    srand(time(NULL));
+    // Enable garbage collection at normal end of runtime.
+    atexit(memfree_all);
 
-    logging_set_file(fopen(LOGGING_DEFAULT_PATH, "w"));
+    // Enable logging.
+    FILE* log_file = fopen(LOGGING_DEFAULT_PATH, "w");
+    assert_error(log_file != NULL, "Couldn't open log file.");
+    logging_set_file(log_file);
 
+    // Emulator check.
     if(!strcmp(argv[1], "CHIP8"))
         return chip8_main_loop(argv[2]);
-    else if(!strcmp(argv[1], "PS1"))
-        return ps1_main_loop(argv[2]);
-    else if(!strcmp(argv[1], "GB"))
-        return gb_main_loop(argv[2]);
     else {
-        fprintf(stderr, "Unknown emulator type %s.\n", argv[1]);
+        set_error("Unknown emulator type has been selected.");
+        show_error();
+        log_print("[ERROR]: Unknown emulator type has been selected: %s\n", argv[1]);
         return EXIT_FAILURE;
     }
 }

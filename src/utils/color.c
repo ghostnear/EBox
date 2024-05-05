@@ -33,7 +33,6 @@ SDL_Color parse_color_rgb(const char * color_string)
             color.r = r;
             color.g = g;
             color.b = b;
-
             return color;
         }
     }

@@ -12,3 +12,4 @@
 
 void logging_set_file(FILE*);
 FILE* logging_get_file();
+void log_print(const char*, ...);

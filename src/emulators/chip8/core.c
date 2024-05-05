@@ -1,5 +1,6 @@
 #include "emulators/chip8/core.h"
 
+#include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -49,6 +50,8 @@ CHIP8EmulatorConfig* chip8_config_parse(FILE* file)
 
 CHIP8Emulator* chip8_emulator_initialize(CHIP8EmulatorConfig* config)
 {
+    srand(time(NULL));
+
     CHIP8Emulator* emulator = calloc(1, sizeof(CHIP8Emulator));
 
     emulator->memory = chip8_memory_initialize();

@@ -50,10 +50,12 @@ void* dynarray_get(dynarray* self, uint32_t index)
 void dynarray_free(void* self)
 {
     const dynarray* array = (dynarray*)self;
-    if(array->free_callback != NULL)
+    for(uint32_t index = 0; index < array->size; index++)
     {
-        for(uint32_t i = 0; i < array->size; i++)
-            array->free_callback(array->data + (i * array->element_size));
+        if(array->free_callback != NULL)
+            array->free_callback(array->data + (index * array->element_size));
+        else
+            free(array->data + (index * array->element_size));
     }
     free(array->data);
     free((void*)array);

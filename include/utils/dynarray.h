@@ -2,8 +2,10 @@
 
 #include <stdint.h>
 
+// Freeing callback.
 typedef void(*dynarray_free_callback)(void*);
 
+// Base type for a simple dynamic array with a freeing function.
 typedef struct {
     void* data;
     uint32_t size;
@@ -17,23 +19,7 @@ typedef struct {
  * If the callback is null, only free() will be used.  
  */
 dynarray* dynarray_create(uint32_t, dynarray_free_callback);
-
-/*
- * Add a copy of an element to the array.
- */
 void dynarray_push_back(dynarray*, void*);
-
-/*
- * Get a pointer to the element at the specified index.
- */
 void* dynarray_get(dynarray*, uint32_t);
-
-/*
- * Remove the element at the specified index.
- */
 void dynarray_remove(dynarray*, uint32_t);
-
-/*
- * Free the dynamic array.
- */
 void dynarray_free(void*);

@@ -22,7 +22,7 @@ void voidptr_list_free_all_internal(voidptr_list_node** self)
         else
             free((*self)->pointer);
     }
-    // TODO: make this not recursive thanks.
+    // TODO: make this not recursive as on big lists we can run out of memory.
     if((*self)->next != NULL)
         voidptr_list_free_all_internal((voidptr_list_node**)&((*self)->next));
     free(*self);

@@ -8,16 +8,19 @@
 
 // Simple .ini file handler, should work with most .ini files.
 
+// An entry in the .ini file. Consists of a key and a value.
 typedef struct {
     char* key;
     char* value;
 } ini_file_entry;
 
+// A section in the .ini file. Consists of a name and a list of entries.
 typedef struct {
     char* name;
     dynarray* entries;
 } ini_file_section;
 
+// The .ini file data. Consists of a list of sections.
 typedef struct {
     dynarray* sections;
 } ini_file_data;
