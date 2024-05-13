@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "emulators/chip8/display.h"
+#include "utils/color.h"
 #include "utils/file.h"
 #include "utils/inifile.h"
 #include "utils/logging.h"
@@ -42,6 +43,30 @@ CHIP8EmulatorConfig* chip8_config_parse(FILE* file)
         exit(-1);
     }
     config->speed = atoi(speed);
+
+    const char* foreground_color = ini_file_get_string(input, "Display", "Foreground");
+    if(foreground_color != NULL)
+    {
+        config->foreground_color = parse_color_rgb(foreground_color);
+    }
+    else
+    {
+        config->foreground_color.r = 0xC8;
+        config->foreground_color.g = 0xC8;
+        config->foreground_color.b = 0xC8;
+    }
+
+    const char* background_color = ini_file_get_string(input, "Display", "Background");
+    if(background_color != NULL)
+    {
+        config->background_color = parse_color_rgb(background_color);
+    }
+    else
+    {
+        config->background_color.r = 0x21;
+        config->background_color.g = 0x21;
+        config->background_color.b = 0x21;
+    }
 
     ini_file_free(input);
 
@@ -100,6 +125,9 @@ CHIP8Emulator* chip8_emulator_initialize(CHIP8EmulatorConfig* config)
     emulator->speed = config->speed;
     emulator->timer = 0;
     emulator->extra_timer = 0;
+
+    emulator->foreground_color = config->foreground_color;
+    emulator->background_color = config->background_color;
 
     return emulator;
 }

@@ -59,7 +59,7 @@ memcheck-windows:
 
 memcheck-unix:
 	@echo "[CMAKE]: Running Valgrind..."
-	@valgrind  --leak-check=full --show-leak-kinds=all --track-origins=yes ./bin/EBox
+	@valgrind  --leak-check=full --show-leak-kinds=all --track-origins=yes ./bin/EBox CHIP8 ./defaults/CHIP8.cfg
 
 unix-profile:
 	@echo "[CMAKE]: Running gprof..."

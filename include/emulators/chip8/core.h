@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdio.h>
+#include <SDL2/SDL.h>
 
 #include "memory.h"
 
@@ -9,6 +10,10 @@ typedef struct
 // ROM
     char* path;
     uint32_t speed; // In instructions per second.
+
+// Display.
+    SDL_Color foreground_color;
+    SDL_Color background_color;
 } CHIP8EmulatorConfig;
 
 typedef struct 
@@ -20,6 +25,9 @@ typedef struct
     uint32_t speed;
 
     void** instruction_cache;
+
+    SDL_Color foreground_color;
+    SDL_Color background_color;
     
     CHIP8Memory* memory;
 } CHIP8Emulator;

@@ -52,6 +52,8 @@ void chip8_emulator_free_display_sdl(void* self)
 
 void chip8_emulator_draw_sdl(void* self, double delta)
 {
+    const CHIP8Emulator* this = self;
+
     // Poll events and draw.
     while(SDL_PollEvent(&event))
     {
@@ -63,13 +65,13 @@ void chip8_emulator_draw_sdl(void* self, double delta)
 
                 for(uint8_t index = 0; index < 0x10; index++)
                     if(event.key.keysym.sym == keybinds[index])
-                        ((CHIP8Emulator*)self)->memory->keys[index] = 1;
+                        this->memory->keys[index] = 1;
                 break;
 
             case SDL_KEYUP:
                 for(uint8_t index = 0; index < 0x10; index++)
                     if(event.key.keysym.sym == keybinds[index])
-                        ((CHIP8Emulator*)self)->memory->keys[index] = 0;
+                        this->memory->keys[index] = 0;
                 break;
 
             case SDL_QUIT:
@@ -80,11 +82,11 @@ void chip8_emulator_draw_sdl(void* self, double delta)
 
     SDL_RenderSetLogicalSize(renderer, 64, 32);
 
-    SDL_SetRenderDrawColor(renderer, 33, 33, 33, 255);
+    SDL_SetRenderDrawColor(renderer, this->background_color.r, this->background_color.g, this->background_color.b, 255);
 
     SDL_RenderClear(renderer);
 
-    SDL_SetRenderDrawColor(renderer, 200, 200, 200, 255);
+    SDL_SetRenderDrawColor(renderer, this->foreground_color.r, this->foreground_color.g, this->foreground_color.b, 255);
 
     // TODO: replace this with an in memory texture and copy.
 
