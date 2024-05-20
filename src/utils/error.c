@@ -1,6 +1,6 @@
 #include "utils/error.h"
 
-#include <SDL_messagebox.h>
+#include <SDL2/SDL_messagebox.h>
 #include <stdio.h>
 
 static const char* error_message = 0;

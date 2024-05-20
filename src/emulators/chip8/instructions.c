@@ -1,5 +1,6 @@
 #include "emulators/chip8/core.h"
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <memory.h>
 #include <stdlib.h>
@@ -249,11 +250,17 @@ void chip8_emulator_step(CHIP8Emulator* self)
         goto END;
     }
 
-    DRW: {
+    DRW: {  
+        if(!self->vblank)
+        {
+            PC() -= 2;
+            goto END;
+        }
+
         self->memory->draw_flag = true;
         V(0xF) = 0;
 
-        // TODO: replace the sprite representation in bytes to bits.
+        // TODO: replace the sprite representation from bytes to bits.
         for(uint8_t y = 0; y < N(opcode); y++)
         {
             uint8_t sprite_byte = chip8_memory_read_byte(self->memory, I() + y);
@@ -275,6 +282,7 @@ void chip8_emulator_step(CHIP8Emulator* self)
                     self->memory->vram[pixel_index] ^= 1;
                 }
         }
+
         goto END;
     }
 
@@ -377,20 +385,21 @@ void chip8_emulator_update(CHIP8Emulator* self, double delta_time)
         return;
 
     self->timer += delta_time;
-    self->extra_timer += delta_time;
-
-    // TODO: this is definatelly not right, but alas it works.
-
-    while(self->extra_timer >= 1.0 / 60.0)
-    {
-        self->memory->delta_timer -= (self->memory->delta_timer > 0);
-        self->memory->sound_timer -= (self->memory->sound_timer > 0);
-        self->extra_timer -= 1.0 / 60.0;
-    }
-
     while(self->timer >= 1.0 / self->speed && self->running)
     {
+        self->extra_timer += 1.0 / self->speed;
+
+        while(self->extra_timer >= 1.0 / 60.0)
+        {
+            self->memory->delta_timer -= (self->memory->delta_timer > 0);
+            self->memory->sound_timer -= (self->memory->sound_timer > 0);
+            self->vblank = true;
+            self->extra_timer -= 1.0 / 60.0;
+        }
+
         chip8_emulator_step(self);
+
+        self->vblank = false;
         self->timer -= 1.0 / self->speed;
     }
 }

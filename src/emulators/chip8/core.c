@@ -1,11 +1,13 @@
 #include "emulators/chip8/core.h"
 
+#include <SDL_video.h>
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "emulators/chip8/display.h"
+#include "ui/window.h"
 #include "utils/color.h"
 #include "utils/file.h"
 #include "utils/inifile.h"
@@ -26,7 +28,7 @@ CHIP8EmulatorConfig* chip8_config_parse(FILE* file)
     ini_file_data* input = ini_file_read(file);
     fclose(file);
 
-    const char* path = ini_file_get_string(input, "ROM", "Path");
+    const char* path = ini_file_get_string(input, "CHIP8.ROM", "Path");
     if(path == NULL)
     {
         fprintf(stderr, "Error: Path has not been specified in startup config!\n");
@@ -35,7 +37,7 @@ CHIP8EmulatorConfig* chip8_config_parse(FILE* file)
     }
     config->path = strdup(path);
 
-    const char* speed = ini_file_get_string(input, "ROM", "Speed");
+    const char* speed = ini_file_get_string(input, "CHIP8.ROM", "Speed");
     if(speed == NULL)
     {
         fprintf(stderr, "Error: Speed has not been specified in startup config!\n");
@@ -44,7 +46,7 @@ CHIP8EmulatorConfig* chip8_config_parse(FILE* file)
     }
     config->speed = atoi(speed);
 
-    const char* foreground_color = ini_file_get_string(input, "Display", "Foreground");
+    const char* foreground_color = ini_file_get_string(input, "CHIP8.Display", "Foreground");
     if(foreground_color != NULL)
     {
         config->foreground_color = parse_color_rgb(foreground_color);
@@ -56,7 +58,7 @@ CHIP8EmulatorConfig* chip8_config_parse(FILE* file)
         config->foreground_color.b = 0xC8;
     }
 
-    const char* background_color = ini_file_get_string(input, "Display", "Background");
+    const char* background_color = ini_file_get_string(input, "CHIP8.Display", "Background");
     if(background_color != NULL)
     {
         config->background_color = parse_color_rgb(background_color);
@@ -120,11 +122,10 @@ CHIP8Emulator* chip8_emulator_initialize(CHIP8EmulatorConfig* config)
 
     emulator->instruction_cache = calloc(memory_size, sizeof(void*));
 
-    chip8_emulator_init_display_sdl((void*)emulator);
-
     emulator->speed = config->speed;
     emulator->timer = 0;
     emulator->extra_timer = 0;
+    emulator->vblank = false;
 
     emulator->foreground_color = config->foreground_color;
     emulator->background_color = config->background_color;
@@ -134,6 +135,8 @@ CHIP8Emulator* chip8_emulator_initialize(CHIP8EmulatorConfig* config)
 
 int chip8_main_loop(char* configPath)
 {
+    SDL_SetWindowTitle(window_get_sdl(), "EBox CHIP8");
+
     FILE* emuConfig = fopen(configPath, "r");
     if(emuConfig == NULL)
     {
@@ -152,7 +155,7 @@ int chip8_main_loop(char* configPath)
     uint64_t last = 0;
     double delta = 0;
 
-    while(emulator->running || chip8_emulator_is_running_sdl())
+    while(emulator->running)
     {
         last = now;
         now = SDL_GetPerformanceCounter();
@@ -166,11 +169,6 @@ int chip8_main_loop(char* configPath)
     }
     
     return EXIT_SUCCESS;
-}
-
-void chip8_emulator_draw(CHIP8Emulator* self, double delta)
-{
-    chip8_emulator_draw_sdl(self, delta);
 }
 
 void chip8_config_free(void* pointer)
@@ -188,6 +186,5 @@ void chip8_emulator_free(void* pointer)
     const CHIP8Emulator* emulator = (CHIP8Emulator*) pointer;
     chip8_memory_free(emulator->memory);
     free(emulator->instruction_cache);
-    chip8_emulator_free_display_sdl((void*)emulator);
     free((void*)emulator);
 }

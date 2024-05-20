@@ -12,5 +12,11 @@ if(CMAKE_BUILD_PLATFORM MATCHES "VITA")
         VERSION ${VITA_VERSION}
         NAME ${VITA_APP_NAME}
         FILE metadata/vita sce_sys
+        FILE defaults/ configs/
+        FILE roms/ roms/
     )
+else()
+    # Copy the assets folder to the build directory
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/defaults/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/configs)
+    file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/roms/ DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/roms)
 endif()

@@ -1,7 +1,8 @@
 bin/
 build/
 .cache/
-roms/
+
+# TODO: add gitignores for non-public domain ROMs.
 
 .vscode/
 

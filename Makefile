@@ -47,19 +47,11 @@ clean:
 	
 run:
 	@echo "[CMAKE]: Running app..."
-	@./bin/EBox CHIP8 ./defaults/CHIP8.cfg
-
+	@cd bin && ./EBox
+	
 run-vita:
 	@echo "[CMAKE]: Running app on Vita..."
 	@vita3k ./build/EBox.vpk
-
-memcheck-windows:
-	@echo "[CMAKE]: Running DrMemory..."
-	@drmemory ./bin/EBox.exe --ignore_kernel
-
-memcheck-unix:
-	@echo "[CMAKE]: Running Valgrind..."
-	@valgrind  --leak-check=full --show-leak-kinds=all --track-origins=yes ./bin/EBox CHIP8 ./defaults/CHIP8.cfg
 
 unix-profile:
 	@echo "[CMAKE]: Running gprof..."
